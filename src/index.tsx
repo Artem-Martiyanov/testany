@@ -5,15 +5,14 @@ import {ThemeProvider} from "styled-components";
 import defaultTheme from "./themes/defaultTheme";
 
 
-
 const root = ReactDom.createRoot(document.getElementById('root'))
 
 root.render(
-    <ThemeProvider theme={defaultTheme}>
-        <React.StrictMode>
-            <App/>
-        </React.StrictMode>
-    </ThemeProvider>
+  <ThemeProvider theme={defaultTheme}>
+    <React.StrictMode>
+      <App/>
+    </React.StrictMode>
+  </ThemeProvider>
 )
 
 
