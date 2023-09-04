@@ -15,12 +15,6 @@ module.exports = {
   ],
   module: {
     rules: [
-      // {
-      //   test: /\.tsx?$/,
-      //   use: 'ts-loader',
-      //   exclude: /node_modules/,
-      // },
-      
       {
         test: /\.tsx|ts$/,
         exclude: /node_modules/,
@@ -68,10 +62,14 @@ module.exports = {
       directory: path.join(__dirname, 'dist'),
     },
     compress: true,
-    port: 3000,
+    port: 8080,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
     historyApiFallback: {
       index: 'index.html'
     },
+    allowedHosts: ['all'],
     hot: true
   },
 };

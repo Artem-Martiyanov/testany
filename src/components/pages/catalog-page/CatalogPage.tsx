@@ -4,66 +4,55 @@ import {Container, ProductList, Tools} from "./styles";
 import Title, {TitleSize} from "../../ui/title/Title";
 import Button from "../../ui/button/Button";
 import {useEffect, useState} from "react";
-import {useAppDispatch, useAppSelector} from "../../../store/hooks";
+import {useAppDispatch} from "../../../store/hooks";
 import {fetchProducts} from "../../../store/action-creators/fetch-product";
 import {useViewport} from "../../../hooks/use-viewport/use-viewport";
 import Dropdown from "../../ui/dropdown/Dropdown";
 import {productsSortByName, productsSortByPrice, productsSortByRating} from "../../../store/reducers/products-slice";
+import {FilterType} from "../../ui/dropdown/Dropdown";
+import {IProduct} from "../../../models/models";
 
 
-const CatalogPage = () => {
+const dropdownOptions = [
+  {
+    title: 'По названию',
+    value: FilterType.NAME,
+  },
+  {
+    title: 'По цене',
+    value: FilterType.PRICE,
+  },
+  {
+    title: 'По рейтингу',
+    value: FilterType.RATING
+  }
+]
+
+type Props = {
+  products: IProduct[]
+}
+
+const CatalogPage = ({products}: Props) => {
   const dispatch = useAppDispatch()
-  const {products} = useAppSelector(state => state.products)
   const viewport = useViewport()
-
-  enum FilterType {
-    NAME = 'name',
-    PRICE = 'price',
-    RATING = 'rating'
-  }
-
-
-  const dropdownOptions = [
-    {
-      title: 'По названию',
-      value: FilterType.NAME,
-    },
-    {
-      title: 'По цене',
-      value: FilterType.PRICE,
-    },
-    {
-      title: 'По рейтингу',
-      value: FilterType.RATING
-    }
-  ]
-
-  const typeFilterHandler = (selectedOption) => {
-    if (selectedOption.value === FilterType.NAME) {
-      dispatch(productsSortByName())
-    }
-    if (selectedOption.value === FilterType.RATING) {
-      dispatch(productsSortByRating())
-    }
-    if (selectedOption.value === FilterType.PRICE) {
-      dispatch(productsSortByPrice())
-    }
-  }
-
+  const [isViewList, setIsViewList] = useState(true)
 
   useEffect(() => {
     dispatch(fetchProducts())
   }, [])
 
-
   useEffect(() => {
-    !viewport.DESKTOP ? setIsViewList(true) : setIsViewList((prev) => prev)
+    !viewport.DESKTOP && setIsViewList(true)
   }, [viewport]);
 
-
-  const [isViewList, setIsViewList] = useState(true)
+  const typeFilterHandler = (selectedOption) => {
+    selectedOption.value === FilterType.NAME && dispatch(productsSortByName())
+    selectedOption.value === FilterType.RATING && dispatch(productsSortByRating())
+    selectedOption.value === FilterType.PRICE && dispatch(productsSortByPrice())
+  }
 
   return (
+    <>
     <Container>
       <Title size={TitleSize.BIG} level={'h1'} bottomIndent='20px'>Каталог продуктов</Title>
       <Tools>
@@ -87,6 +76,7 @@ const CatalogPage = () => {
         })}
       </ProductList>
     </Container>
+    </>
   );
 };
 

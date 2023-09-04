@@ -20,7 +20,6 @@ type Props = {
 const Dropdown = ({title, elements, defaultValue, onSelect}: Props) => {
   const [filterType, setFilterType] = useState(defaultValue)
 
-
   return (
     <StyledSelect
       defaultValue={filterType || 'disabled'}
@@ -38,5 +37,11 @@ const Dropdown = ({title, elements, defaultValue, onSelect}: Props) => {
     </StyledSelect>
   );
 };
+
+export enum FilterType {
+  NAME = 'name',
+  PRICE = 'price',
+  RATING = 'rating'
+}
 
 export default Dropdown;

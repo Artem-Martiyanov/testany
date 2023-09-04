@@ -7,25 +7,26 @@ import CatalogPage from "../pages/catalog-page/CatalogPage";
 import MainPage from "../pages/main-page/MainPage";
 import NotFoundPage from "../pages/not-found-page/NotFoundPage";
 import ScrollUp from "../tools/scroll-up/ScrollUp";
-import {Provider} from "react-redux";
-import {store} from "../../store/store";
+import {useAppSelector} from "../../store/hooks";
 
 
 const App = () => {
+  const {products} = useAppSelector(state => state.products)
+
   return (
-    <Provider store={store}>
+    <>
       <GlobalStyles/>
       <Router>
         <ScrollUp/>
         <Routes>
           <Route path={AppRoute.MAIN} element={<PageWrapper/>}>
             <Route index element={<MainPage/>}/>
-            <Route path={AppRoute.CATALOG} element={<CatalogPage/>}/>
+            <Route path={AppRoute.CATALOG} element={<CatalogPage products={products}/>}/>
             <Route path={AppRoute["404"]} element={<NotFoundPage/>}/>
           </Route>
         </Routes>
       </Router>
-    </Provider>
+    </>
   );
 };
 
