@@ -1,12 +1,20 @@
 import styled from 'styled-components';
 
-export type TitleSizeType = '20px' | '24px' | '28px'
+
+export enum Size {
+  SMALL = '18px',
+  MEDIUM = '24px',
+  LARGE = '28px'
+}
 
 interface TitleProps {
-  size: TitleSizeType,
+  size: Size,
 }
 
 export const Title = styled.h1<TitleProps>`
-  color: ${({theme}) => theme.colors.buttonPrimary};
+  color: ${({theme}) => theme.colors.textSecondary};
   font-size: ${({size}) => size};
+  margin: 0;
+  
+  margin-bottom: ${({$indent}) => $indent}px;
 `

@@ -32,15 +32,15 @@ const defaultTheme: DefaultTheme = {
   colors: {
     textPrimary: '#1e1e1e',
     textSecondary: '#333333',
-    mainPrimary: '#28efb3',
-    mainSecondary: '#4ff5c4',
+    mainPrimary: '#7a7a7a',
+    mainSecondary: '#646464',
     buttonPrimary: '#b367f1',
     buttonSecondary: '#95f167',
   },
   buttonDownOpacity: 0.2,
   media: {
-    tablet: '(min-width: 768px)',
-    desktop: '(min-width: 1080px)',
+    tablet: 'min-width: 768px',
+    desktop: 'min-width: 1080px',
   },
   containerWidth: {
     tablet: '700px',
