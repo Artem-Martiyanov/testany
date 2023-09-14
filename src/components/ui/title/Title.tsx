@@ -1,23 +1,16 @@
 import * as React from 'react';
 import {Title as StyledTitle} from "./styles";
+import {TitleSizeType} from "./styles";
 
 
-type Props = {
-  children: string,
-  size?: string,
-  level?: string,
-  bottomIndent?: string
+interface TitleProps {
+  size: TitleSizeType,
+  level: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 }
 
-export const TitleSize = {
-  SMALL: '20px',
-  REGULAR: '32px',
-  BIG: '44px'
-}
-
-const Title = ({children, size = TitleSize.REGULAR, level = 'h1', bottomIndent}: Props) => {
+const Title: React.FC<TitleProps> = ({size, level, children}) => {
   return (
-    <StyledTitle as={level} $bottomIndent={bottomIndent} $size={size}>
+    <StyledTitle as={level} size={size}>
       {children}
     </StyledTitle>
   );

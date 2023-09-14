@@ -1,10 +1,17 @@
 import {useEffect, useState} from "react";
 
-export const useViewport = () => {
+
+type ViewportType = {
+  MOBILE: boolean,
+  TABLET: boolean,
+  DESKTOP: boolean
+}
+
+export const useViewport = (): ViewportType => {
   const initState = {MOBILE: false, TABLET: false, DESKTOP: false}
   let newState = initState
 
-  const [viewport, setViewport] = useState(initState);
+  const [viewport, setViewport] = useState<ViewportType>(initState);
   const resizeHandler = () => {
     if (!newState.MOBILE && window.innerWidth < 768) {
       newState = {...initState, MOBILE: true}

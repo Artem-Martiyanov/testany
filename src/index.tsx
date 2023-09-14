@@ -13,12 +13,8 @@ root.render(
   <ThemeProvider theme={defaultTheme}>
     <React.StrictMode>
       <Provider store={store}>
-      <App/>
+        <App/>
       </Provider>
     </React.StrictMode>
   </ThemeProvider>
 )
-
-
-
-

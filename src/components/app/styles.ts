@@ -14,7 +14,7 @@ const GlobalStyles = createGlobalStyle`
   }
 
   body {
-    font-family: ${props => props.theme.fontRoboto};
+    font-family: ${({theme}) => theme.fontRoboto};
     margin: 0;
     height: 100%;
     font-size: 16px;
