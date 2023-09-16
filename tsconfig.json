@@ -8,8 +8,8 @@
     "allowJs": true,
     "moduleResolution": "node",
     "sourceMap": true,
+
     "lib": [
-      "decorators",
       "dom",
       "es5",
       "scripthost",

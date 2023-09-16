@@ -29,14 +29,14 @@ module.exports = {
           }
         }
       },
-      
-      
+
+
       {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
         type: 'asset/resource',
         resourceQuery: /url/,
       },
-      
+
       {
         test: /\.svg$/i,
         issuer: /\.[jt]sx?$/,
@@ -61,15 +61,18 @@ module.exports = {
     static: {
       directory: path.join(__dirname, 'dist'),
     },
+    port: 3000,
     compress: true,
-    port: 8080,
     headers: {
       'Access-Control-Allow-Origin': '*',
     },
     historyApiFallback: {
       index: 'index.html'
     },
-    allowedHosts: ['all'],
-    hot: true
+    allowedHosts: 'auto',
+    client: {
+      logging: 'warn',
+      overlay: false
+    }
   },
 };

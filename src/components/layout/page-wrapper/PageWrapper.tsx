@@ -15,4 +15,4 @@ const PageWrapper: React.FC = () => {
   );
 };
 
-export default PageWrapper;
+export default React.memo(PageWrapper);

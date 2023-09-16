@@ -11,8 +11,7 @@ import PersonalPage from '../pages/personal-page/PersonalPage';
 
 
 const App: React.FC = () => {
-  const {products} = useAppSelector(state => state.products)
-
+  // const {products} = useAppSelector(state => state.products)
   return (
     <>
       <GlobalStyles/>
@@ -30,4 +29,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default React.memo(App);
