@@ -1,8 +1,20 @@
-import React, {FC, useState} from 'react'
+import React, {FC, useEffect, useState} from 'react'
+import {useNavigate} from 'react-router-dom'
+import {useAppSelector} from '../../../store/hooks'
+import {AppRoute} from '../../../routes'
 
 
 const PersonalPage: FC = () => {
   const [show, setShow] = useState(false)
+  const authState = useAppSelector(state => state.auth)
+  const setLocation = useNavigate()
+  useEffect(() => {
+    if (!authState.isAuth) {
+      setLocation(AppRoute.MAIN)
+    }
+  }, [])
+  
+  
   return (
       <div>
         

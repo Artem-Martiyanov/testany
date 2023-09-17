@@ -1,10 +1,8 @@
 import React, {ChangeEvent, FC, MouseEventHandler} from 'react'
 import {Button, Input, InputProps, Link} from '@skbkontur/react-ui'
 import {Buttons, InputTitle, LoginFormWrapper} from './styles'
-import {useDispatch} from 'react-redux'
-import {IUser} from '../../../models/IUser'
 import {useEffect, useState} from 'react'
-import {useAppSelector} from '../../../store/hooks'
+import {useAppDispatch, useAppSelector} from '../../../store/hooks'
 import Validator from '../../tools/validator/Validator'
 import {
   getConfirmPasswordMessage,
@@ -15,7 +13,10 @@ import {
 } from './validate'
 import {authUser} from '../../../store/action-creators/user-auth'
 
-type inputsType = IUser & {
+type inputsType = {
+  email: string,
+  name: string,
+  password: string,
   confirm?: string,
 }
 
@@ -32,7 +33,7 @@ interface AuthorizationFormTypes {
 }
 
 const AuthorizationForm: FC<AuthorizationFormTypes> = ({isLogin, onClick}) => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const authState = useAppSelector(state => state.auth)
   
   useEffect(() => {

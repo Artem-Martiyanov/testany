@@ -1,15 +1,15 @@
 import {initializeApp} from 'firebase/app'
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB6Ek3J7phdYweu2SoZwV_9F2MY3Xz_76Y",
-  authDomain: "test-any-5aa3b.firebaseapp.com",
-  databaseURL: "https://test-any-5aa3b-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "test-any-5aa3b",
-  storageBucket: "test-any-5aa3b.appspot.com",
-  messagingSenderId: "635520411650",
-  appId: "1:635520411650:web:0de14c3a9d66bc935a1f1b",
-  measurementId: "G-XQ4GXWM288"
-};
+  apiKey: process.env['REACT_APP_FIREBASE_API_KEY'],
+  authDomain: process.env['REACT_APP_FIREBASE_AUTH_DOMAIN'],
+  databaseURL: process.env['REACT_APP_FIREBASE_DATABASE_URL'],
+  projectId: process.env['REACT_APP_FIREBASE_PROJECT_ID'],
+  storageBucket: process.env['REACT_APP_FIREBASE_STORAGE_BUCKET'],
+  messagingSenderId: process.env['REACT_APP_FIREBASE_MESSAGING_SENDER_ID'],
+  appId: process.env['REACT_APP_FIREBASE_APP_ID'],
+  measurementId: process.env['REACT_APP_FIREBASE_MEASUREMENT_ID'],
+}
 
 
 export const app = initializeApp(firebaseConfig)

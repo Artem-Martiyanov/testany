@@ -1,5 +1,5 @@
-import React, {FC} from "react";
-import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import React, {FC, useEffect} from 'react'
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 import {AppRoute} from '../../routes'
 import ScrollUp from '../tools/scroll-up/ScrollUp'
 import NotFoundPage from '../pages/not-found-page/NotFoundPage'
@@ -7,10 +7,24 @@ import MainPage from '../pages/main-page/MainPage'
 import PersonalPage from '../pages/personal-page/PersonalPage'
 import PageWrapper from '../layout/page-wrapper/PageWrapper'
 import GlobalStyles from './styles'
-
+import {isAuth} from '../../firebase/session'
+import {useAppDispatch} from '../../store/hooks'
+import {authUserWithStorage} from '../../store/action-creators/user-auth'
 
 const App: FC = () => {
-  // const {products} = useAppSelector(state => state.products)
+  const dispatch = useAppDispatch()
+  
+  
+  
+ 
+  
+  
+  useEffect(() => {
+    if (isAuth()) {
+      dispatch(authUserWithStorage())
+    }
+  }, [])
+  
   return (
       <>
         <GlobalStyles/>
@@ -20,12 +34,14 @@ const App: FC = () => {
             <Route path={AppRoute.MAIN} element={<PageWrapper/>}>
               <Route index element={<MainPage/>}/>
               <Route path={AppRoute.PERSONAL} element={<PersonalPage/>}/>
+            </Route>
+            <Route path={AppRoute.NOT_FOUND} element={<PageWrapper/>}>
               <Route path={AppRoute.NOT_FOUND} element={<NotFoundPage/>}/>
             </Route>
           </Routes>
         </Router>
       </>
-  );
-};
+  )
+}
 
-export default React.memo(App);
+export default React.memo(App)

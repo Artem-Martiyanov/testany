@@ -7,7 +7,7 @@ interface ICheck {
 }
 
 export const checkFunctions: ICheck = {
-  email: (input) => input.length < 1 || /\w*@[a-zA-Z]+\.[a-zA-Z]+/g.test(input),
+  email: (input) => input.length < 1 || /\w+@[a-zA-Z]+\.[a-zA-Z]+/g.test(input),
   minInputLength: (input, value) => input.length >= value,
   compareValues: (firstInput, secondInput) => firstInput === secondInput
 }

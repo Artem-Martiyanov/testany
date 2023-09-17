@@ -6,10 +6,13 @@ import {useEffect, useState} from 'react'
 import Modal from '../../ui/modal/Modal'
 import Title from '../../ui/title/Title'
 import {Size} from '../../ui/title/styles'
-import {useAppSelector} from '../../../store/hooks'
+import {useAppDispatch, useAppSelector} from '../../../store/hooks'
 import AuthorizationForm from '../authorization-form/AuthorizationForm'
+import {authOutUser} from '../../../store/action-creators/user-auth'
 
 const Header: React.FC = () => {
+  const dispatch = useAppDispatch()
+  
   const authState = useAppSelector(state => state.auth)
   
   const [modal, setModal] = useState(false)
@@ -30,9 +33,11 @@ const Header: React.FC = () => {
             </Nav>
             <UserNav>
               <UserName to={AppRoute.PERSONAL}>{authState.user.name}</UserName>
-              <Button onClick={() => {
-                setModal(true)
-              }}>{authState.isAuth ? 'Выйти' : 'Войти'}</Button>
+              {authState.isAuth ?
+                  <Button onClick={() => dispatch(authOutUser())}>Выйти</Button>
+                  :
+                  <Button onClick={() => setModal(true)}>Войти</Button>
+              }
             </UserNav>
           </HeaderContainer> </StyledHeader> {modal &&
           <Modal title={<Title size={Size.SMALL} level={'h3'}>{isLogin ? 'Вход' : 'Регистрация'}</Title>}

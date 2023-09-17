@@ -1,10 +1,8 @@
-import {createSlice, PayloadAction, Slice} from '@reduxjs/toolkit';
-import {IUser} from "../../models/IUser";
-
+import {createSlice, PayloadAction, Slice} from '@reduxjs/toolkit'
+import {IUser, Role} from '../../models/IUser'
 
 
 interface AuthState {
-  role: 'root' | 'user' | '',
   isAuth: boolean,
   user: IUser,
   error: string
@@ -12,15 +10,16 @@ interface AuthState {
 
 
 const initialState: AuthState = {
-  role: '',
   isAuth: false,
   error: '',
   user: {
     email: '',
     name: '',
-    password: ''
+    password: '',
+    role: '',
+    token: ''
   },
-};
+}
 
 export const authSlice: Slice<AuthState> = createSlice({
   name: 'auth',
@@ -30,23 +29,35 @@ export const authSlice: Slice<AuthState> = createSlice({
       state.error = ''
       state.user = action.payload
     },
-    
-    userAuthSuccess: (state, action: PayloadAction<{ name: string, role: string }>) => {
+    userAuthSuccess: (state, action: PayloadAction<IUser>) => {
       state.isAuth = true
       state.error = ''
-      state.user.name = action.payload.name
+      state.user = action.payload
     },
-    
     userAuthError: (state, action: PayloadAction<string>) => {
       state.isAuth = false
       state.error = action.payload
-    }
+    },
+    
+    userAuthOut: (state) => {
+      state.error = ''
+    },
+    userAuthOutSuccess: (state) => {
+      state.isAuth = false
+      state.user = initialState.user
+    },
+    userAuthOutError: (state, action: PayloadAction<string>) => {
+      state.error = action.payload
+    },
   },
-});
+})
 
 
 export const {
   userAuth,
   userAuthSuccess,
   userAuthError,
-} = authSlice.actions;
+  userAuthOut,
+  userAuthOutSuccess,
+  userAuthOutError,
+} = authSlice.actions

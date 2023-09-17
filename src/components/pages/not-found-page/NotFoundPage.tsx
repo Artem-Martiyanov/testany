@@ -4,12 +4,10 @@ import {AppRoute} from "../../../routes";
 
 const NotFoundPage: FC = () => {
   return (
-      <>
         <h1>Станица не найдена :(
           <br/>
           попробуйте ещё раз: <Link to={AppRoute.MAIN}>Главная</Link>
         </h1>
-      </>
   );
 };
 
