@@ -9,6 +9,7 @@ import {Size} from '../../ui/title/styles'
 import {useAppDispatch, useAppSelector} from '../../../store/hooks'
 import AuthorizationForm from '../authorization-form/AuthorizationForm'
 import {authOutUser} from '../../../store/action-creators/user-auth'
+import LoaderOverlay from '../../ui/loader-overlay/LoaderOverlay'
 
 const Header: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -39,11 +40,15 @@ const Header: React.FC = () => {
                   <Button onClick={() => setModal(true)}>Войти</Button>
               }
             </UserNav>
-          </HeaderContainer> </StyledHeader> {modal &&
-          <Modal title={<Title size={Size.SMALL} level={'h3'}>{isLogin ? 'Вход' : 'Регистрация'}</Title>}
-                 onClose={() => setModal(false)}>
-            <AuthorizationForm isLogin={isLogin} onClick={() => setIsLogin(!isLogin)}/>
-          </Modal>}
+          </HeaderContainer>
+        </StyledHeader>
+        {modal &&
+            <Modal title={<Title size={Size.SMALL} level={'h3'}>{isLogin ? 'Вход' : 'Регистрация'}</Title>}
+                   onClose={() => setModal(false)}>
+              <AuthorizationForm isLogin={isLogin} onClick={() => setIsLogin(!isLogin)}/>
+            </Modal>}
+  
+        {authState.fetching && <LoaderOverlay/>}
       </>
   )
 }

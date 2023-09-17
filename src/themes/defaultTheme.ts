@@ -12,6 +12,12 @@ declare module 'styled-components' {
       buttonPrimary: string,
       buttonSecondary: string
     },
+    levels: {
+      base: number,
+      modals: number,
+      overlays: number
+      ultra: number
+    }
     buttonDownOpacity: number,
     media: {
       tablet: string,
@@ -36,6 +42,12 @@ const defaultTheme: DefaultTheme = {
     mainSecondary: '#646464',
     buttonPrimary: '#b367f1',
     buttonSecondary: '#95f167',
+  },
+  levels: {
+    base: 0,
+    modals: 5,
+    overlays: 10,
+    ultra: 10000
   },
   buttonDownOpacity: 0.2,
   media: {

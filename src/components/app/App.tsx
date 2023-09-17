@@ -7,7 +7,6 @@ import MainPage from '../pages/main-page/MainPage'
 import PersonalPage from '../pages/personal-page/PersonalPage'
 import PageWrapper from '../layout/page-wrapper/PageWrapper'
 import GlobalStyles from './styles'
-import {isAuth} from '../../firebase/session'
 import {useAppDispatch} from '../../store/hooks'
 import {authUserWithStorage} from '../../store/action-creators/user-auth'
 
@@ -15,14 +14,10 @@ const App: FC = () => {
   const dispatch = useAppDispatch()
   
   
-  
- 
-  
-  
   useEffect(() => {
-    if (isAuth()) {
-      dispatch(authUserWithStorage())
-    }
+    
+    dispatch(authUserWithStorage())
+    
   }, [])
   
   return (
