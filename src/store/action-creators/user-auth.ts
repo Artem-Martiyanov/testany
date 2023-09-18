@@ -46,7 +46,7 @@ export const authUser = (userData: IUser, type: 'register' | 'login') => async (
       case 'register': {
         const userInfo = await createUserWithEmailAndPassword(auth, userData.email, userData.password || '')
         user = await userInfo.user
-        await updateProfile(user, {displayName: `${userData.name}::common`})
+        await updateProfile(user, {displayName: `${userData.name}::root`})
         break
       }
       case 'login': {
