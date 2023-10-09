@@ -2,18 +2,18 @@ import {createSlice, PayloadAction, Slice} from '@reduxjs/toolkit'
 import {IUser} from '../../models/IUser'
 
 
-interface AuthState {
-  isAuth: boolean,
-  fetching: boolean,
+interface UserState {
   user: IUser,
-  error: string
+  fetching: boolean,
+  error: string,
+  image: string,
 }
 
 
-const initialState: AuthState = {
-  isAuth: false,
+const initialState: UserState = {
   error: '',
   fetching: true,
+  image: '',
   user: {
     email: '',
     name: '',
@@ -22,8 +22,8 @@ const initialState: AuthState = {
   },
 }
 
-export const authSlice: Slice<AuthState> = createSlice({
-  name: 'auth',
+export const userSlice: Slice<UserState> = createSlice({
+  name: 'user',
   initialState,
   reducers: {
     fetchEnd: (state) => {
@@ -34,16 +34,13 @@ export const authSlice: Slice<AuthState> = createSlice({
       state.error = ''
       state.user = action.payload
       state.fetching = true
-      
     },
     userAuthSuccess: (state, action: PayloadAction<IUser>) => {
-      state.isAuth = true
       state.error = ''
       state.user = action.payload
       state.fetching = false
     },
     userAuthError: (state, action: PayloadAction<string>) => {
-      state.isAuth = false
       state.error = action.payload
       state.fetching = false
     },
@@ -53,7 +50,6 @@ export const authSlice: Slice<AuthState> = createSlice({
       state.fetching = true
     },
     userAuthOutSuccess: (state) => {
-      state.isAuth = false
       state.user = initialState.user
       state.fetching = false
     },
@@ -73,4 +69,4 @@ export const {
   userAuthOutSuccess,
   userAuthOutError,
   fetchEnd,
-} = authSlice.actions
+} = userSlice.actions

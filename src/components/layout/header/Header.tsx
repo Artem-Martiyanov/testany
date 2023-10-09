@@ -9,7 +9,6 @@ import {Size} from '../../ui/title/styles'
 import {useAppDispatch, useAppSelector} from '../../../store/hooks'
 import AuthorizationForm from '../authorization-form/AuthorizationForm'
 import {authOutUser} from '../../../store/action-creators/user-auth'
-import LoaderOverlay from '../../ui/loader-overlay/LoaderOverlay'
 
 const Header: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -33,7 +32,7 @@ const Header: React.FC = () => {
               <StyledLink to={AppRoute.CATALOG}>Тесты</StyledLink>
             </Nav>
             <UserNav>
-              <UserName to={AppRoute.PERSONAL}>{authState.user.name}</UserName>
+              <UserName to={AppRoute.PERSONAL}>{authState.isAuth && authState.user.name}</UserName>
               {authState.isAuth ?
                   <Button onClick={() => dispatch(authOutUser())}>Выйти</Button>
                   :
@@ -47,8 +46,6 @@ const Header: React.FC = () => {
                    onClose={() => setModal(false)}>
               <AuthorizationForm isLogin={isLogin} onClick={() => setIsLogin(!isLogin)}/>
             </Modal>}
-  
-        {authState.fetching && <LoaderOverlay/>}
       </>
   )
 }

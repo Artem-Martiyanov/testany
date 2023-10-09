@@ -26,6 +26,10 @@ export const getPasswordMessage = (input: string) => {
 export const getLoginMessage = (input: string) => {
   let result = ''
   
+  if (!checkFunctions.noSpecialSign(input)) {
+    result = 'Псевдоним не должен содержать " :: "'
+  }
+  
   if (!checkFunctions.minInputLength(input, 2)) {
     result = 'Минимум: 2 символа'
   }
@@ -42,8 +46,19 @@ export const getConfirmPasswordMessage = (firstInput: string = '', secondInput: 
 }
 
 
-export const getTranslatedMessage = (serverError: string) => ({
-      email: serverError.includes('user') ? 'Пользователь с таким email не найден...' : '',
-      password: serverError.includes('password') ? 'Неверный пароль' : '',
-    } as { email: string, password: string }
-)
+export const getTranslatedMessage = (serverError: string) => {
+  const emailDictionary: { [key: string]: string } = {
+    'Firebase: Error (auth/email-already-in-use).': 'Такой email уже зарегистрирован',
+    'Firebase: Error (auth/user-not-found).': 'Пользователь с таким email не найден...',
+  }
+  
+  const passwordDictionary: { [key: string]: string } = {
+    'Firebase: Error (auth/wrong-password).': 'Неверный пароль',
+  }
+  
+  return {
+    email: emailDictionary[serverError] || '',
+    password: passwordDictionary[serverError] || '',
+  } as { email: string, password: string }
+}
+

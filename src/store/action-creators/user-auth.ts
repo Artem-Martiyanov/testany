@@ -46,7 +46,7 @@ export const authUser = (userData: IUser, type: 'register' | 'login') => async (
       case 'register': {
         const userInfo = await createUserWithEmailAndPassword(auth, userData.email, userData.password || '')
         user = await userInfo.user
-        await updateProfile(user, {displayName: `${userData.name}::root`})
+        await updateProfile(user, {displayName: `${userData.name}::common`})
         break
       }
       case 'login': {
@@ -69,7 +69,6 @@ export const authUser = (userData: IUser, type: 'register' | 'login') => async (
 
 export const authUserWithStorage = () => async (dispatch: AppDispatch) => {
   try {
-    
     await setPersistence(auth, browserLocalPersistence)
     if (auth.currentUser?.refreshToken) {
       const userData = {
@@ -82,7 +81,6 @@ export const authUserWithStorage = () => async (dispatch: AppDispatch) => {
   
     dispatch(fetchEnd(undefined))
   } catch (error: any) {
-    
     dispatch(userAuthError(error.message))
   }
 }

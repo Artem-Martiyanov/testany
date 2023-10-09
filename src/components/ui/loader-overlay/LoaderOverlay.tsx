@@ -1,11 +1,7 @@
 import React, {FC} from 'react'
-import {Column, ColumnWrapper, Overlay, Spinner} from './styles'
+import {Column, ColumnWrapper, Overlay} from './styles'
 
-interface LoaderOverlayTypes {
-  
-}
-
-const LoaderOverlay: FC<LoaderOverlayTypes> = () => {
+const LoaderOverlay: FC = () => {
   return (
       <Overlay>
         <ColumnWrapper>

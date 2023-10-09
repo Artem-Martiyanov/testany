@@ -39,8 +39,7 @@ const AuthorizationForm: FC<AuthorizationFormTypes> = ({isLogin, onClick}) => {
   useEffect(() => {
     setErrorMessages({
       ...errorMessages,
-      email: getTranslatedMessage(authState.error).email,
-      password: getTranslatedMessage(authState.error).password,
+      ...getTranslatedMessage(authState.error),
     })
   }, [authState.error])
   
