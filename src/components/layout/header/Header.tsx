@@ -14,6 +14,7 @@ const Header: React.FC = () => {
   const dispatch = useAppDispatch()
   
   const authState = useAppSelector(state => state.auth)
+  const userState = useAppSelector(state => state.user)
   
   const [modal, setModal] = useState(false)
   const [isLogin, setIsLogin] = useState(true)
@@ -32,7 +33,7 @@ const Header: React.FC = () => {
               <StyledLink to={AppRoute.CATALOG}>Тесты</StyledLink>
             </Nav>
             <UserNav>
-              <UserName to={AppRoute.PERSONAL}>{authState.isAuth && authState.user.name}</UserName>
+              <UserName to={AppRoute.PERSONAL}>{authState.isAuth && userState.user.name}</UserName>
               {authState.isAuth ?
                   <Button onClick={() => dispatch(authOutUser())}>Выйти</Button>
                   :

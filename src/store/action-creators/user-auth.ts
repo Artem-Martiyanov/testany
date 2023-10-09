@@ -11,18 +11,19 @@ import {
 
 import {app} from '../../firebase'
 import {
-  fetchEnd,
-  userAuth,
-  userAuthError,
-  userAuthOut,
-  userAuthOutError,
-  userAuthOutSuccess,
-  userAuthSuccess,
+  auth,
+  authError,
+  authOut,
+  authOutError,
+  authOutSuccess,
+  authSuccess,
 } from '../reducers/auth-slice'
+import {fetchEnd, fetchStart} from '../reducers/app-slice'
+import {clearUser, setUser} from '../reducers/user-slice'
 import {IUser} from '../../models/IUser'
 
 
-const auth = getAuth(app)
+const authFireBase = getAuth(app)
 
 
 const getUserNameAndRole = (userStr: string) => {
@@ -38,61 +39,72 @@ const getUserNameAndRole = (userStr: string) => {
 
 export const authUser = (userData: IUser, type: 'register' | 'login') => async (dispatch: AppDispatch) => {
   try {
-    await setPersistence(auth, browserLocalPersistence)
-    dispatch(userAuth({name: userData.name, email: userData.email}))
+    await setPersistence(authFireBase, browserLocalPersistence)
+    dispatch(auth(undefined))
+    dispatch(setUser({name: userData.name, email: userData.email}))
+    dispatch(fetchStart(undefined))
     let user
     
     switch (type) {
       case 'register': {
-        const userInfo = await createUserWithEmailAndPassword(auth, userData.email, userData.password || '')
+        const userInfo = await createUserWithEmailAndPassword(authFireBase, userData.email, userData.password || '')
         user = await userInfo.user
         await updateProfile(user, {displayName: `${userData.name}::common`})
         break
       }
       case 'login': {
-        const userInfo = await signInWithEmailAndPassword(auth, userData.email, userData.password || '')
+        const userInfo = await signInWithEmailAndPassword(authFireBase, userData.email, userData.password || '')
         user = userInfo.user
         break
       }
     }
     
-    dispatch(userAuthSuccess({
+    dispatch(authSuccess(undefined))
+    dispatch(setUser({
       ...getUserNameAndRole(user.displayName || ''),
       token: user.refreshToken,
       email: user.email,
     }))
   } catch (error: any) {
-    dispatch(userAuthError(error.message))
+    dispatch(authError(error.message))
+  } finally {
+    dispatch(fetchEnd(undefined))
   }
 }
 
 
 export const authUserWithStorage = () => async (dispatch: AppDispatch) => {
   try {
-    await setPersistence(auth, browserLocalPersistence)
-    if (auth.currentUser?.refreshToken) {
+    dispatch(fetchStart(undefined))
+    await setPersistence(authFireBase, browserLocalPersistence)
+    if (authFireBase.currentUser?.refreshToken) {
       const userData = {
-        ...getUserNameAndRole(auth.currentUser?.displayName || ''),
-        email: auth.currentUser?.email || '',
-        token: auth.currentUser?.refreshToken || '',
+        ...getUserNameAndRole(authFireBase.currentUser?.displayName || ''),
+        email: authFireBase.currentUser?.email || '',
+        token: authFireBase.currentUser?.refreshToken || '',
       }
-      dispatch(userAuthSuccess(userData))
+      dispatch(authSuccess(undefined))
+      dispatch(setUser(userData))
     }
-  
-    dispatch(fetchEnd(undefined))
   } catch (error: any) {
-    dispatch(userAuthError(error.message))
+    dispatch(authError(error.message))
+  } finally {
+    dispatch(fetchEnd(undefined))
   }
 }
 
 
 export const authOutUser = () => async (dispatch: AppDispatch) => {
   try {
-    dispatch(userAuthOut(undefined))
-    await signOut(auth)
-    dispatch(userAuthOutSuccess(undefined))
+    dispatch(fetchStart(undefined))
+    dispatch(authOut(undefined))
+    await signOut(authFireBase)
+    dispatch(authOutSuccess(undefined))
+    dispatch(clearUser(undefined))
   } catch (error: any) {
-    dispatch(userAuthOutError(error.message))
+    dispatch(authOutError(error.message))
+  } finally {
+    dispatch(fetchEnd(undefined))
   }
 }
 

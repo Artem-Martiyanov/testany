@@ -9,6 +9,7 @@ import {Button} from '@skbkontur/react-ui'
 const PersonalPage: FC = () => {
   const [show, setShow] = useState(false)
   const authState = useAppSelector(state => state.auth)
+  const userState = useAppSelector(state => state.user)
   const setLocation = useNavigate()
   
   
@@ -40,12 +41,12 @@ const PersonalPage: FC = () => {
         </div>
         
         
-        <p>Имя: <b>{authState.user.name}</b></p>
-        <p>Email: <b>{authState.user.email}</b></p>
-        <p>Роль: <b>{authState.user.role}</b></p>
+        <p>Имя: <b>{userState.user.name}</b></p>
+        <p>Email: <b>{userState.user.email}</b></p>
+        <p>Роль: <b>{userState.user.role}</b></p>
         
         
-        {authState.user.role === 'root' &&
+        {userState.user.role === 'root' &&
             <Button onClick={() => {
               setShow(true)
             }}>Кнопка Админа</Button>

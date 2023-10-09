@@ -14,6 +14,7 @@ import LoaderOverlay from '../ui/loader-overlay/LoaderOverlay'
 const App: FC = () => {
   const dispatch = useAppDispatch()
   const authState = useAppSelector(state => state.auth)
+  const appState = useAppSelector(state => state.app)
   
   useEffect(() => {
     dispatch(authUserWithStorage())
@@ -21,7 +22,7 @@ const App: FC = () => {
   
   return (
       <>
-        {authState.fetching
+        {appState.fetching
             ?
             <LoaderOverlay/>
             :

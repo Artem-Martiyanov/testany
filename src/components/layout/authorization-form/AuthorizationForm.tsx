@@ -81,7 +81,6 @@ const AuthorizationForm: FC<AuthorizationFormTypes> = ({isLogin, onClick}) => {
     error: errorMessages[name].length > 0,
   }) as InputProps
   
-  // @ts-ignore
   return (
       <LoginFormWrapper action="/" method="post">
         {!isLogin &&
