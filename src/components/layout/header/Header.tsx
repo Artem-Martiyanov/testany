@@ -34,20 +34,22 @@ const Header: React.FC = () => {
               <StyledLink to={AppRoute.CATALOG}>Тесты</StyledLink>
             </Nav>
             <UserNav>
-              
               <UserName to={AppRoute.PERSONAL}>
-                <Avatar>
-                  {userState.user.avatar?.image &&
-                      <Image
-                          src={userState.user.avatar?.image}
-                          offset={userState.user.avatar?.settings.offset}
-                          scale={userState.user.avatar?.settings.scale}
-                          alt="Аватар."
-                      />
-                  }
-                  
-                </Avatar>
-                {authState.isAuth && userState.user.name}
+                {authState.isAuth &&
+                    <>
+                      <Avatar>
+                        {userState.user.avatar?.image &&
+                            <Image
+                                src={userState.user.avatar?.image}
+                                offset={userState.user.avatar?.settings.offset}
+                                scale={userState.user.avatar?.settings.scale}
+                                alt="Аватар."
+                            />
+                        }
+                      </Avatar>
+                      {userState.user.name}
+                    </>
+                }
               </UserName>
               {authState.isAuth ?
                   <Button onClick={() => dispatch(authOutUser())}>Выйти</Button>

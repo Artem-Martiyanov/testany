@@ -1,4 +1,4 @@
-import React, {ChangeEvent, FC, ReactElement, useState} from 'react'
+import React, {ChangeEvent, FC, useRef, useState} from 'react'
 import {BottomPanel, FileInput, FileInputLabel, HoverBackground, ImageWrapper, RemoveButton, TopPanel} from './styles'
 import {CrossIcon, UploadIcon} from '../icons'
 import Modal from '../modal/Modal'
@@ -14,12 +14,19 @@ interface ChangedImageTypes {
 const ChangedImage: FC<ChangedImageTypes> = ({children, onSubmit, imageIsUploaded}) => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
-  
+  const inputFile = useRef<HTMLInputElement>(null)
   
   const submitAvatarHandler = (settings: ImageSettings) => {
     if (avatarFile) {
       onSubmit(avatarFile, settings)
     }
+  }
+  
+  const closeModalHandler = () => {
+    if (inputFile.current) {
+      inputFile.current.value = ''
+    }
+    setIsModalVisible(false)
   }
   
   const removeButtonHandler = () => {
@@ -53,6 +60,7 @@ const ChangedImage: FC<ChangedImageTypes> = ({children, onSubmit, imageIsUploade
               Загрузить изображение
               <UploadIcon/>
               <FileInput
+                  ref={inputFile}
                   type="file"
                   accept="image/*"
                   onChange={changeAvatarHandler}
@@ -62,7 +70,7 @@ const ChangedImage: FC<ChangedImageTypes> = ({children, onSubmit, imageIsUploade
         </HoverBackground>
       </ImageWrapper>
         {isModalVisible &&
-            <Modal onClose={() => setIsModalVisible(false)}>
+            <Modal onClose={closeModalHandler}>
               <ImageConfigurator image={avatarFile} onSubmit={submitAvatarHandler}/>
             </Modal>}
         </>
