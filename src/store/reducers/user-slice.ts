@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction, Slice} from '@reduxjs/toolkit'
-import {IUser} from '../../models/IUser'
+import {defaultUser, IUser} from '../../models/IUser'
 
 
 interface UserState {
@@ -8,12 +8,7 @@ interface UserState {
 
 
 const initialState: UserState = {
-  user: {
-    email: '',
-    name: '',
-    role: '',
-    token: '',
-  },
+  user: defaultUser,
 }
 
 export const userSlice: Slice<UserState> = createSlice({

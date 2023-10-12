@@ -1,17 +1,22 @@
-import React, {ChangeEvent, FC, useEffect, useState} from 'react'
+import React, {FC, useEffect} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {useAppSelector} from '../../../store/hooks'
+import {useAppDispatch, useAppSelector} from '../../../store/hooks'
 import {AppRoute} from '../../../routes'
 import Container from '../../styled/container/Container'
-import userProfileImage from '../../../assets/images/user-profile.png'
-import {Button} from '@skbkontur/react-ui'
+import {changeUserAvatar, changeUserData} from '../../../store/action-creators/user-change'
+import {ImageSettings} from '../../../models/IUser'
+import {EditIcon} from '../../ui/icons'
+import {UserAvatarWrapper, UserInfo, UserProfile} from './styles'
+import ChangedText from '../../ui/changed-text/ChangedText'
+import Image from '../../ui/image/Image'
+import ChangedImage from '../../ui/changed-image/ChangedImage'
+
 
 const PersonalPage: FC = () => {
-  const [show, setShow] = useState(false)
   const authState = useAppSelector(state => state.auth)
   const userState = useAppSelector(state => state.user)
   const setLocation = useNavigate()
-  
+  const dispatch = useAppDispatch()
   
   useEffect(() => {
     if (!authState.isAuth) {
@@ -20,40 +25,41 @@ const PersonalPage: FC = () => {
   }, [authState.isAuth, setLocation])
   
   
+  const userDataChangeHandler = (newValue: string) => {
+    dispatch(changeUserData({name: newValue}))
+  }
   
+  const changeAvatarHandler = (newAvatar: File | null, settings: ImageSettings) => {
+    dispatch(changeUserAvatar(newAvatar, settings))
+    dispatch(changeUserData({avatar: {image: '', settings: settings}}))
+  }
   
   return (
       <Container>
-        <div>
-          <img src={userProfileImage} width={250} height={250} alt="Аватар."/>
-          <label>
-            Сменить аватар <input type="file" accept="image/png, image/jpeg" onChange={(evt: ChangeEvent<HTMLInputElement>) => {
-            if (evt.target.files && evt.target.files.length) {
-              const userAvatar: File = evt.target.files[0]
-              
-              console.dir(userAvatar)
-              
-            }
-            
-          }
-          }/>
-          </label>
-        </div>
-        
-        
-        <p>Имя: <b>{userState.user.name}</b></p>
+        <UserProfile>
+          <UserAvatarWrapper>
+            <ChangedImage onSubmit={changeAvatarHandler} imageIsUploaded={!!userState.user.avatar?.image}>
+              {userState.user.avatar?.image &&
+                  <Image
+                      src={userState.user.avatar.image}
+                      offset={userState.user.avatar.settings.offset}
+                      scale={userState.user.avatar.settings.scale}
+                      alt="Аватар."
+                  />
+              }
+            </ChangedImage>
+          </UserAvatarWrapper>
+          <UserInfo>
+            <ChangedText
+                value={userState.user.name}
+                onSubmit={userDataChangeHandler}
+                icon={<EditIcon/>}
+                font={{size: '24px', weight: '700'}}
+            />
+          </UserInfo>
+        </UserProfile>
         <p>Email: <b>{userState.user.email}</b></p>
-        <p>Роль: <b>{userState.user.role}</b></p>
-        
-        
-        {userState.user.role === 'root' &&
-            <Button onClick={() => {
-              setShow(true)
-            }}>Кнопка Админа</Button>
-        }
-        {show ? <div>
-          Привет, Админ!
-        </div> : ''}
+        <p>Права: <b>{userState.user.role}</b></p>
       </Container>
   )
 }

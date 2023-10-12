@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './components/app/App'
-import {ThemeProvider} from 'styled-components'
-import defaultTheme from './themes/defaultTheme'
+import {ThemeContext, ThemeProvider} from 'styled-components'
+import defaultTheme from './themes/default-theme'
 import {Provider} from 'react-redux'
 import {store} from './store/store'
 

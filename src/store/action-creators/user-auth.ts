@@ -4,14 +4,13 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   signOut,
-  updateProfile,
   setPersistence,
   browserLocalPersistence,
 } from 'firebase/auth'
 
 import {app} from '../../firebase'
 import {
-  auth,
+  authStart,
   authError,
   authOut,
   authOutError,
@@ -20,91 +19,78 @@ import {
 } from '../reducers/auth-slice'
 import {fetchEnd, fetchStart} from '../reducers/app-slice'
 import {clearUser, setUser} from '../reducers/user-slice'
-import {IUser} from '../../models/IUser'
+import {defaultUser, IUser} from '../../models/IUser'
+import {getUserDataFromDataBase, setUserInDataBase} from '../../firebase/fetch-users'
 
+const auth = getAuth(app)
 
-const authFireBase = getAuth(app)
-
-
-const getUserNameAndRole = (userStr: string) => {
-  if (userStr && userStr.split('::').length === 2) {
-    return {
-      name: userStr.split('::')[0],
-      role: userStr.split('::')[1],
-    }
-  } else {
-    throw new Error('Not correct name')
-  }
-}
 
 export const authUser = (userData: IUser, type: 'register' | 'login') => async (dispatch: AppDispatch) => {
   try {
-    await setPersistence(authFireBase, browserLocalPersistence)
-    dispatch(auth(undefined))
-    dispatch(setUser({name: userData.name, email: userData.email}))
-    dispatch(fetchStart(undefined))
-    let user
+    await setPersistence(auth, browserLocalPersistence)
+    dispatch(authStart(null))
+    dispatch(fetchStart(null))
     
     switch (type) {
       case 'register': {
-        const userInfo = await createUserWithEmailAndPassword(authFireBase, userData.email, userData.password || '')
-        user = await userInfo.user
-        await updateProfile(user, {displayName: `${userData.name}::common`})
+        const userInfo = await createUserWithEmailAndPassword(auth, userData.email, userData.password || '')
+        const user = await userInfo.user
+        
+        await setUserInDataBase({
+          ...defaultUser,
+          name: userData.name || '',
+          email: user.email || '',
+          token: user.refreshToken,
+        })
+        
         break
       }
       case 'login': {
-        const userInfo = await signInWithEmailAndPassword(authFireBase, userData.email, userData.password || '')
-        user = userInfo.user
+        await signInWithEmailAndPassword(auth, userData.email, userData.password || '')
         break
       }
     }
     
-    dispatch(authSuccess(undefined))
-    dispatch(setUser({
-      ...getUserNameAndRole(user.displayName || ''),
-      token: user.refreshToken,
-      email: user.email,
-    }))
+    const user = await getUserDataFromDataBase()
+    
+    dispatch(authSuccess(null))
+    dispatch(setUser(user))
   } catch (error: any) {
     dispatch(authError(error.message))
   } finally {
-    dispatch(fetchEnd(undefined))
+    dispatch(fetchEnd(null))
   }
 }
 
 
 export const authUserWithStorage = () => async (dispatch: AppDispatch) => {
   try {
-    dispatch(fetchStart(undefined))
-    await setPersistence(authFireBase, browserLocalPersistence)
-    if (authFireBase.currentUser?.refreshToken) {
-      const userData = {
-        ...getUserNameAndRole(authFireBase.currentUser?.displayName || ''),
-        email: authFireBase.currentUser?.email || '',
-        token: authFireBase.currentUser?.refreshToken || '',
-      }
-      dispatch(authSuccess(undefined))
-      dispatch(setUser(userData))
+    dispatch(fetchStart(null))
+    const user = await getUserDataFromDataBase()
+    
+    if (user.token) {
+      dispatch(authSuccess(null))
+      dispatch(setUser(user))
     }
+    
   } catch (error: any) {
     dispatch(authError(error.message))
   } finally {
-    dispatch(fetchEnd(undefined))
+    dispatch(fetchEnd(null))
   }
 }
 
-
 export const authOutUser = () => async (dispatch: AppDispatch) => {
   try {
-    dispatch(fetchStart(undefined))
-    dispatch(authOut(undefined))
-    await signOut(authFireBase)
-    dispatch(authOutSuccess(undefined))
-    dispatch(clearUser(undefined))
+    dispatch(fetchStart(null))
+    dispatch(authOut(null))
+    await signOut(auth)
+    dispatch(authOutSuccess(null))
+    dispatch(clearUser(null))
   } catch (error: any) {
     dispatch(authOutError(error.message))
   } finally {
-    dispatch(fetchEnd(undefined))
+    dispatch(fetchEnd(null))
   }
 }
 

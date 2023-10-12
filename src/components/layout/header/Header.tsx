@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {HeaderContainer, Nav, StyledHeader, StyledLink, UserName, UserNav} from './styles'
+import {Avatar, HeaderContainer, Nav, StyledHeader, StyledLink, UserName, UserNav} from './styles'
 import {Button} from '@skbkontur/react-ui'
 import {AppRoute} from '../../../routes'
 import {useEffect, useState} from 'react'
@@ -9,6 +9,7 @@ import {Size} from '../../ui/title/styles'
 import {useAppDispatch, useAppSelector} from '../../../store/hooks'
 import AuthorizationForm from '../authorization-form/AuthorizationForm'
 import {authOutUser} from '../../../store/action-creators/user-auth'
+import Image from '../../ui/image/Image'
 
 const Header: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -33,7 +34,21 @@ const Header: React.FC = () => {
               <StyledLink to={AppRoute.CATALOG}>Тесты</StyledLink>
             </Nav>
             <UserNav>
-              <UserName to={AppRoute.PERSONAL}>{authState.isAuth && userState.user.name}</UserName>
+              
+              <UserName to={AppRoute.PERSONAL}>
+                <Avatar>
+                  {userState.user.avatar?.image &&
+                      <Image
+                          src={userState.user.avatar?.image}
+                          offset={userState.user.avatar?.settings.offset}
+                          scale={userState.user.avatar?.settings.scale}
+                          alt="Аватар."
+                      />
+                  }
+                  
+                </Avatar>
+                {authState.isAuth && userState.user.name}
+              </UserName>
               {authState.isAuth ?
                   <Button onClick={() => dispatch(authOutUser())}>Выйти</Button>
                   :

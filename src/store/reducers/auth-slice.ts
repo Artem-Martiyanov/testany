@@ -16,7 +16,7 @@ export const authSlice: Slice<AuthState> = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    auth: (state) => {
+    authStart: (state) => {
       state.error = ''
     },
     authSuccess: (state) => {
@@ -41,7 +41,7 @@ export const authSlice: Slice<AuthState> = createSlice({
 
 
 export const {
-  auth,
+  authStart,
   authSuccess,
   authError,
   authOut,
