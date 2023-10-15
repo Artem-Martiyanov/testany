@@ -36,7 +36,7 @@ export const setUserInDataBase = async (user: IUser) => {
   try {
     await setPersistence(auth, browserLocalPersistence)
     const uid = auth.currentUser?.uid
-    await set(ref(db, `users/${uid}`), user)
+    await set(ref(db, `${DataBaseUrl.USERS}/${uid}`), user)
   } catch (e: any) {
     console.error('setUserInDataBase: ' + e.message)
   }
@@ -48,7 +48,7 @@ export const setUserParameterInDataBase = async (parameterName: string, paramete
     await setPersistence(auth, browserLocalPersistence)
     const uid = auth.currentUser?.uid
     if (uid) {
-      await set(ref(db, `users/${uid}/${parameterName}`), parameterValue)
+      await set(ref(db, `${DataBaseUrl.USERS}/${uid}/${parameterName}`), parameterValue)
     }
   } catch (e: any) {
     console.log('setUserParameterInDataBase: ' + e.message)

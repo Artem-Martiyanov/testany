@@ -1,4 +1,4 @@
-import {createSlice, Slice} from '@reduxjs/toolkit'
+import {createSlice} from '@reduxjs/toolkit'
 
 
 interface AppState {
@@ -10,7 +10,7 @@ const initialState: AppState = {
   fetching: true,
 }
 
-export const appSlice: Slice<AppState> = createSlice({
+export const appSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {

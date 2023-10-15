@@ -1,4 +1,4 @@
-import {createSlice, PayloadAction, Slice} from '@reduxjs/toolkit'
+import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 
 
 type messageType = 'success' | 'warning' | 'error'
@@ -16,7 +16,7 @@ const initialState: PopupState = {
   type: 'success'
 }
 
-export const popupSlice: Slice<PopupState> = createSlice({
+export const popupSlice = createSlice({
   name: 'popup',
   initialState,
   reducers: {

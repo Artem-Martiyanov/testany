@@ -24,6 +24,7 @@ import {defaultUser, IUser} from '../../models/IUser'
 import {getUserDataFromDataBase, setUserInDataBase} from '../../firebase/fetch-users'
 import {setPopupMessage} from '../reducers/popup-slice'
 import {getTranslatedMessage} from '../../components/tools/validator/validate'
+import firebase from 'firebase/compat'
 
 const auth = getAuth(app)
 
@@ -31,8 +32,8 @@ const auth = getAuth(app)
 export const authUser = (userData: IUser, type: 'register' | 'login') => async (dispatch: AppDispatch) => {
   try {
     await setPersistence(auth, browserLocalPersistence)
-    dispatch(authStart(null))
-    dispatch(fetchStart(null))
+    dispatch(authStart())
+    dispatch(fetchStart())
     
     switch (type) {
       case 'register': {
@@ -45,7 +46,6 @@ export const authUser = (userData: IUser, type: 'register' | 'login') => async (
           email: user.email || '',
           token: user.refreshToken,
         })
-        
         break
       }
       case 'login': {
@@ -55,38 +55,38 @@ export const authUser = (userData: IUser, type: 'register' | 'login') => async (
     }
     const user = await getUserDataFromDataBase()
     
-    dispatch(authSuccess(null))
+    dispatch(authSuccess())
     dispatch(setUser(user))
   } catch (error: any) {
     console.error('authUser: ' + error.message)
     dispatch(authError(error.message))
   } finally {
-    dispatch(fetchEnd(null))
+    dispatch(fetchEnd())
   }
 }
 
 export const userChangePassword = (newPassword: string) => async (dispatch: AppDispatch) => {
   try {
     if (auth.currentUser) {
-      dispatch(fetchStart(null))
+      dispatch(fetchStart())
       await updatePassword(auth.currentUser, newPassword)
       dispatch(setPopupMessage({message: 'Пароль успешно изменён', type: 'success'}))
     }
   } catch (error: any) {
     dispatch(setPopupMessage({message: getTranslatedMessage(error.message).password, type: 'error'}))
   } finally {
-    dispatch(fetchEnd(null))
+    dispatch(fetchEnd())
   }
 }
 
 
 export const authUserWithStorage = () => async (dispatch: AppDispatch) => {
   try {
-    dispatch(fetchStart(null))
+    dispatch(fetchStart())
     const user = await getUserDataFromDataBase()
     
     if (user.token) {
-      dispatch(authSuccess(null))
+      dispatch(authSuccess())
       dispatch(setUser(user))
     }
     
@@ -94,21 +94,21 @@ export const authUserWithStorage = () => async (dispatch: AppDispatch) => {
     console.error('authUserWithStorage: ' + error.message)
     dispatch(authError(error.message))
   } finally {
-    dispatch(fetchEnd(null))
+    dispatch(fetchEnd())
   }
 }
 
 export const authOutUser = () => async (dispatch: AppDispatch) => {
   try {
-    dispatch(fetchStart(null))
-    dispatch(authOut(null))
+    dispatch(fetchStart())
+    dispatch(authOut())
     await signOut(auth)
-    dispatch(authOutSuccess(null))
-    dispatch(clearUser(null))
+    dispatch(authOutSuccess())
+    dispatch(clearUser())
   } catch (error: any) {
     dispatch(authOutError(error.message))
   } finally {
-    dispatch(fetchEnd(null))
+    dispatch(fetchEnd())
   }
 }
 

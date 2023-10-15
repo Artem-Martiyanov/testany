@@ -10,6 +10,7 @@ import {setUser} from '../reducers/user-slice'
 import {ImageSettings, IUser} from '../../models/IUser'
 import {browserLocalPersistence, getAuth, setPersistence} from 'firebase/auth'
 import {setUserInDataBase, setUserParameterInDataBase} from '../../firebase/fetch-users'
+import {DataBaseUrl} from '../../firebase/db-url'
 
 
 const storage = getStorage(app)
@@ -35,16 +36,16 @@ export const changeUserData = (newData: Partial<IUser>) => async (dispatch: AppD
   }
 }
 
-export const changeUserAvatar = (file: File | null, settings: ImageSettings) => async (dispatch: AppDispatch) => {
+export const changeUserAvatar = (imageFile: File | null, settings: ImageSettings) => async (dispatch: AppDispatch) => {
   try {
     dispatch(fetchStart(undefined))
     await setPersistence(auth, browserLocalPersistence)
     const userId = auth.currentUser?.uid || ''
     
-    const mountainUserRef = ref(storage, `users/${userId}/avatar`)
+    const mountainUserRef = ref(storage, `${DataBaseUrl.USERS}/${userId}/avatar`)
     
-    if (file) {
-      await uploadBytes(mountainUserRef, file)
+    if (imageFile) {
+      await uploadBytes(mountainUserRef, imageFile)
     } else {
       await deleteObject(mountainUserRef)
     }
