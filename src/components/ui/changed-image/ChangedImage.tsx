@@ -4,6 +4,14 @@ import {CrossIcon, UploadIcon} from '../icons'
 import Modal from '../modal/Modal'
 import ImageConfigurator from '../../blocks/image-configurator/ImageConfigurator'
 import {defaultImageSettings, ImageSettings} from '../../../models/IUser'
+import {useAppDispatch} from '../../../store/hooks'
+import {setPopupMessage} from '../../../store/reducers/popup-slice'
+
+
+const Settings: { UPLOAD_FILE_TYPES: string, MAX_UPLOAD_FILE_SIZE: number } = {
+  UPLOAD_FILE_TYPES: 'image/*',
+  MAX_UPLOAD_FILE_SIZE: 0.5,
+}
 
 interface ChangedImageTypes {
   children: any
@@ -12,13 +20,15 @@ interface ChangedImageTypes {
 }
 
 const ChangedImage: FC<ChangedImageTypes> = ({children, onSubmit, imageIsUploaded}) => {
+  const dispatch = useAppDispatch()
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
-  const [avatarFile, setAvatarFile] = useState<File | null>(null)
+  const [imageFile, setImageFile] = useState<File | null>(null)
   const inputFile = useRef<HTMLInputElement>(null)
   
-  const submitAvatarHandler = (settings: ImageSettings) => {
-    if (avatarFile) {
-      onSubmit(avatarFile, settings)
+  const submitImageHandler = (settings: ImageSettings) => {
+    if (imageFile) {
+      onSubmit(imageFile, settings)
+      setIsModalVisible(false)
     }
   }
   
@@ -33,47 +43,58 @@ const ChangedImage: FC<ChangedImageTypes> = ({children, onSubmit, imageIsUploade
     onSubmit(null, defaultImageSettings)
   }
   
-  const changeAvatarHandler = (evt: ChangeEvent<HTMLInputElement>) => {
+  const changeImageHandler = (evt: ChangeEvent<HTMLInputElement>) => {
     const files = evt.target.files
     
     if (files && files.length) {
       const userAvatar: File = files[0]
+      
+      if (userAvatar.size / 1024 / 1024 > Settings.MAX_UPLOAD_FILE_SIZE) {
+        dispatch(setPopupMessage({
+          message: `Размер файла не должен превышать ${Settings.MAX_UPLOAD_FILE_SIZE}Мб`,
+          type: 'error',
+        }))
+        evt.target.value = ''
+        return
+      }
+      
       setIsModalVisible(true)
-      setAvatarFile(userAvatar)
+      setImageFile(userAvatar)
+      evt.target.value = ''
     }
   }
   
   return (
       <>
-      <ImageWrapper>
-        {children}
-        <HoverBackground>
-          <TopPanel>
-            {imageIsUploaded &&
-            <RemoveButton type="button" title="Удалить изображение" onClick={removeButtonHandler}>
-              <CrossIcon/>
-            </RemoveButton>
-            }
-          </TopPanel>
-          <BottomPanel>
-            <FileInputLabel>
-              Загрузить изображение
-              <UploadIcon/>
-              <FileInput
-                  ref={inputFile}
-                  type="file"
-                  accept="image/*"
-                  onChange={changeAvatarHandler}
-              />
-            </FileInputLabel>
-          </BottomPanel>
-        </HoverBackground>
-      </ImageWrapper>
+        <ImageWrapper>
+          {children}
+          <HoverBackground>
+            <TopPanel>
+              {imageIsUploaded &&
+                  <RemoveButton type="button" title="Удалить изображение" onClick={removeButtonHandler}>
+                    <CrossIcon/>
+                  </RemoveButton>
+              }
+            </TopPanel>
+            <BottomPanel>
+              <FileInputLabel>
+                Загрузить изображение
+                <UploadIcon/>
+                <FileInput
+                    ref={inputFile}
+                    type="file"
+                    accept={Settings.UPLOAD_FILE_TYPES}
+                    onChange={changeImageHandler}
+                />
+              </FileInputLabel>
+            </BottomPanel>
+          </HoverBackground>
+        </ImageWrapper>
         {isModalVisible &&
             <Modal onClose={closeModalHandler}>
-              <ImageConfigurator image={avatarFile} onSubmit={submitAvatarHandler}/>
+              <ImageConfigurator image={imageFile} onSubmit={submitImageHandler} withMask/>
             </Modal>}
-        </>
+      </>
   )
 }
 

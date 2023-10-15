@@ -16,14 +16,6 @@ export const EditButton = styled.button`
   color: ${props => props.theme.colors.mainPrimary};
 `
 
-export const Label = styled.label`
-  display: flex;
-
-  button {
-    font-size: 18px;
-  }
-`
-
 interface TextProps {
   $font?: {
     size?: string,
@@ -32,7 +24,7 @@ interface TextProps {
   children: any
 }
 
-export const Text: FC<TextProps> = styled.p`
+export const Text = styled.p<TextProps>`
   margin: 0;
   
   ${({$font}) => $font && css`

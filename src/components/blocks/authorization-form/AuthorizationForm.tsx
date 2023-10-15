@@ -10,7 +10,7 @@ import {
   getLoginMessage,
   getPasswordMessage,
   getTranslatedMessage,
-} from './validate'
+} from '../../tools/validator/validate'
 import {authUser} from '../../../store/action-creators/user-auth'
 
 type inputsType = {
@@ -36,6 +36,10 @@ const AuthorizationForm: FC<AuthorizationFormTypes> = ({isLogin, onClick}) => {
   const dispatch = useAppDispatch()
   const authState = useAppSelector(state => state.auth)
   
+  const [user, setUser] = useState<inputsType>(initAuthState)
+  const [errorMessages, setErrorMessages] = useState<inputsType>(initAuthState)
+  
+  
   useEffect(() => {
     setErrorMessages({
       ...errorMessages,
@@ -45,9 +49,10 @@ const AuthorizationForm: FC<AuthorizationFormTypes> = ({isLogin, onClick}) => {
   
   useEffect(() => setErrorMessages(initAuthState), [isLogin])
   
-  const [user, setUser] = useState<inputsType>(initAuthState)
-  const [errorMessages, setErrorMessages] = useState<inputsType>(initAuthState)
+  
   const changeHandler = (evt: ChangeEvent<HTMLInputElement>) => setUser({...user, [evt.target.name]: evt.target.value})
+  
+  
   const submitHandler: MouseEventHandler = (evt) => {
     evt.preventDefault()
     const isAllValid = (messagesArray: string[]) => messagesArray.every((message => !message.length))

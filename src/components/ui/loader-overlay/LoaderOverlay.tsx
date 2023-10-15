@@ -1,14 +1,11 @@
 import React, {FC} from 'react'
-import {Column, ColumnWrapper, Overlay} from './styles'
+import {Overlay} from './styles'
+import Loader from '../loader/Loader'
 
 const LoaderOverlay: FC = () => {
   return (
       <Overlay>
-        <ColumnWrapper>
-          <Column/>
-          <Column/>
-          <Column/>
-        </ColumnWrapper>
+        <Loader/>
       </Overlay>
   )
 }

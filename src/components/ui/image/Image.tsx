@@ -1,5 +1,6 @@
-import React, {FC} from 'react'
-import {StyledImage} from './styles'
+import React, {FC, useState} from 'react'
+import {ImageWrapper, StyledImage} from './styles'
+import Loader from '../loader/Loader'
 
 interface ImageTypes extends Partial<HTMLImageElement> {
   offset?: {
@@ -10,12 +11,19 @@ interface ImageTypes extends Partial<HTMLImageElement> {
 }
 
 const Image: FC<ImageTypes> = ({offset, scale, ...props}) => {
+  const [isLoaded, setIsLoaded] = useState(false)
   return (
-      <StyledImage
-          $offset={offset}
-          $scale={scale}
-          {...props}
-      />
+      <ImageWrapper>
+        <StyledImage
+            onLoad={() => setIsLoaded(true)}
+            $offset={offset}
+            $scale={scale}
+            $isLoaded={isLoaded}
+            {...props}
+        />
+        {!isLoaded && <Loader/>}
+        
+      </ImageWrapper>
   )
 }
 

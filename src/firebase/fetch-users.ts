@@ -15,15 +15,18 @@ export const getUserDataFromDataBase = async () => {
   const uid = auth.currentUser?.uid
   let userData = {}
   
-  try {
-    const snapshot = await get(child(ref(getDatabase()), `${DataBaseUrl.USERS}/${uid}`))
-    if (snapshot.exists()) {
-      userData = snapshot.val()
+  if (uid) {
+    try {
+      const snapshot = await get(child(ref(getDatabase()), `${DataBaseUrl.USERS}/${uid}`))
+      if (snapshot.exists()) {
+        userData = snapshot.val()
+      }
+      
+    } catch (e: any) {
+      console.error('getUserDataFromDataBase: ' + e.message)
     }
-    
-  } catch (e) {
-    console.log(e)
   }
+  
   return userData as IUser
 }
 
@@ -34,8 +37,8 @@ export const setUserInDataBase = async (user: IUser) => {
     await setPersistence(auth, browserLocalPersistence)
     const uid = auth.currentUser?.uid
     await set(ref(db, `users/${uid}`), user)
-  } catch (e) {
-    console.log(e)
+  } catch (e: any) {
+    console.error('setUserInDataBase: ' + e.message)
   }
   
 }
@@ -44,9 +47,11 @@ export const setUserParameterInDataBase = async (parameterName: string, paramete
   try {
     await setPersistence(auth, browserLocalPersistence)
     const uid = auth.currentUser?.uid
-    await set(ref(db, `users/${uid}/${parameterName}`), parameterValue)
-  } catch (e) {
-    console.log(e)
+    if (uid) {
+      await set(ref(db, `users/${uid}/${parameterName}`), parameterValue)
+    }
+  } catch (e: any) {
+    console.log('setUserParameterInDataBase: ' + e.message)
   }
   
 }

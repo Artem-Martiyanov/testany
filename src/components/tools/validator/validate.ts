@@ -1,4 +1,4 @@
-import {checkFunctions} from '../../tools/validator/validate-functions'
+import {checkFunctions} from './validate-functions'
 
 
 export const getEmailMessage = (input: string) => {
@@ -54,6 +54,7 @@ export const getTranslatedMessage = (serverError: string) => {
   
   const passwordDictionary: { [key: string]: string } = {
     'Firebase: Error (auth/wrong-password).': 'Неверный пароль',
+    'Firebase: Error (auth/requires-recent-login).': 'Требуется повторить вход'
   }
   
   return {

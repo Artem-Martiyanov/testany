@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, {css} from 'styled-components'
 import {Link, NavLink} from 'react-router-dom'
 import {Container} from '../../styled'
 import userProfileImage from '../../../assets/images/user-profile.png'
@@ -40,15 +40,20 @@ export const UserName = styled(Link)`
   color: ${({theme}) => theme.colors.textPrimary};
 `
 
-export const Avatar = styled.div`
+interface AvatarProps {
+  $isAvatarLoaded: boolean
+}
+export const Avatar = styled.div<AvatarProps>`
   width: 30px;
   height: 30px;
   border-radius: 50%;
   overflow: hidden;
-  background: url(${userProfileImage}) no-repeat center;
-  background-size: contain;
-  
-  img {
-    box-shadow: 0 0 0 1000px #ffffff;
+  ${({$isAvatarLoaded}) => $isAvatarLoaded ?
+          'background: #ffffff'
+          :
+          css`
+            background: url(${userProfileImage}) no-repeat center;
+            background-size: contain;
+          `
   }
 `
