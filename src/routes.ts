@@ -4,4 +4,4 @@ export enum AppRoute {
   PERSONAL = '/personal',
   EDITOR = '/editor',
   NOT_FOUND = '*',
-};
+}
